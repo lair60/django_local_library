@@ -130,7 +130,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'lair130785@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_KEY','')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Luis Inga Rivera <lair60@yahoo.es>'
 
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
