@@ -3,8 +3,6 @@ from rq import Queue
 from worker import conn
 import os
 import django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
-django.setup()
 from utils import removeLinks
 
 """
@@ -14,10 +12,21 @@ def scheduled_job():
 	
 """
 if __name__ == '__main__':
-   q = Queue(connection=conn)
-   sched = BlockingScheduler()
-   @sched.scheduled_job('interval', minutes=1)
-   def timed_job():
-       result = q.enqueue(removeLinks)
-       print('This job is run every 1 minute.')
-   sched.start()
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
+    django.setup()
+    q = Queue(connection=conn)
+    sched = BlockingScheduler()
+    @sched.scheduled_job('interval', minutes=1)
+    def timed_job():
+        result = q.enqueue(removeLinks)
+        print('This job is run every 1 minute.')
+    sched.start()
+else:
+    def start_jobs():
+        q = Queue(connection=conn)
+        sched = BlockingScheduler()
+        @sched.scheduled_job('interval', minutes=1)
+        def timed_job():
+            result = q.enqueue(removeLinks)
+            print('This job is run every 1 minute.')
+        sched.start()
