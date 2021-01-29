@@ -2,6 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from rq import Queue
 from worker import conn
 import os
+import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
 django.setup()
 from utils import removeLinks
