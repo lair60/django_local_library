@@ -1,5 +1,5 @@
 import datetime
-from .models import TemporalLink
+from catalog.models import TemporalLink
 
 def removeLinks():
     datetime_object = datetime.datetime.now()
