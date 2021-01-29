@@ -153,3 +153,7 @@ class RenewBookModelForm(ModelForm):
         fields = ['due_back']
         labels = {'due_back': _('Renewal date')}
         help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 3).')}
+
+class TemporalLink(models.Model):
+    link_temporal = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)

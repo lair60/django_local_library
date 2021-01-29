@@ -39,6 +39,10 @@ urlpatterns += [
 from django.views.generic import RedirectView
 
 urlpatterns += [
+    path('createnewuser/', RedirectView.as_view(url='/catalog/newuser/', permanent=True), name='create-new-user'),
+]
+
+urlpatterns += [
     path('', RedirectView.as_view(url='/catalog/', permanent=True)),
 ]
 

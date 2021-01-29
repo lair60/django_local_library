@@ -22,3 +22,6 @@ class RenewBookForm(forms.Form):
 
         # Remember to always return the cleaned data.
         return data
+		
+class CreateNewUserForm(forms.Form):
+    email_user = forms.EmailField(help_text='A valid email address, please.')

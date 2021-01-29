@@ -27,11 +27,15 @@
         <td>{{ form.password }}</td>
       </tr>
     </table>
-    <input type="submit" value="login" />
+    <input style="margin-top: 10px;" name="login"  type="submit" value="Login" />	
     <input type="hidden" name="next" value="{{ next }}" />
   </form>
-
+  <form method="post" action="{% url 'create-new-user' %}">
+  {% csrf_token %}
+	<input  style="margin-top: 10px;" name="create" type="submit" value="Create a New User" />
+  </form>
+  
   {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  <p style="margin-top: 10px;"><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
 {% endblock %}

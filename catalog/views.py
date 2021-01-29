@@ -4,32 +4,92 @@ from django.contrib.auth.decorators import login_required
 from .models import Book, Author, BookInstance, Genre, RenewBookModelForm
 @login_required
 def index(request):
-    """
-    Función vista para la página inicio del sitio.
-    """
-    # Genera contadores de algunos de los objetos principales
-    num_books=Book.objects.all().count()
-    num_instances=BookInstance.objects.all().count()
-    # Libros disponibles (status = 'a')
-    num_instances_available=BookInstance.objects.filter(status__exact='a').count()
-    num_authors=Author.objects.count()  # El 'all()' esta implícito por defecto.
+       """
+       Función vista para la página inicio del sitio.
+       """
+       # Genera contadores de algunos de los objetos principales
+       num_books=Book.objects.all().count()
+       num_instances=BookInstance.objects.all().count()
+       # Libros disponibles (status = 'a')
+       num_instances_available=BookInstance.objects.filter(status__exact='a').count()
+       num_authors=Author.objects.count()  # El 'all()' esta implícito por defecto.
 	
-    num_genre=Genre.objects.all().count()
-    search_word='the'
-    num_book_search = Book.objects.filter(title__icontains=search_word).count()
+       num_genre=Genre.objects.all().count()
+       search_word='the'
+       num_book_search = Book.objects.filter(title__icontains=search_word).count()
 	
-	# Number of visits to this view, as counted in the session variable.
-    num_visits = request.session.get('num_visits', 1)
-    request.session['num_visits'] = num_visits + 1
+	   # Number of visits to this view, as counted in the session variable.
+       num_visits = request.session.get('num_visits', 1)
+       request.session['num_visits'] = num_visits + 1
     
-    # Renderiza la plantilla HTML index.html con los datos en la variable contexto
-    return render(
+       # Renderiza la plantilla HTML index.html con los datos en la variable contexto
+       return render(
         request,
         'index.html',
         context={'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,
 		'num_authors':num_authors, 'num_genre': num_genre, 'search_word': search_word,
 		'num_book_search': num_book_search, 'num_visits': num_visits},
-    )
+       )
+from catalog.forms import CreateNewUserForm
+from django.contrib.auth.models import User
+import secrets
+from django.core.mail import send_mail
+
+
+
+from django.core.mail import EmailMessage
+from django.urls import reverse
+def createNewUser(request):
+    context = {}
+    if request.method == 'POST':       
+        
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = CreateNewUserForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            email_user = form.cleaned_data['email_user']
+            if User.objects.filter(email=email_user).count() == 0:
+                # redirect to a new URL:
+                context = {'email': email_user}                
+                password = secrets.token_urlsafe(16)             
+                user = User.objects.create_user(email_user, email_user, password)
+                if request.is_secure():
+                    url= "https://"
+                else:
+                    url= "http://"
+                url= url + request.get_host() + reverse ('login')
+				
+                message_email_html = (f'<p><b>Hello</b>,</p><br>'
+                                       f'<p>As per your request, here are the details of the new user:</p><br>'
+                                       f'<p>       <b>Username</b>: {email_user}</p>'
+                                       f'<p>       <b>Password</b>: {password}</p><br>'
+                                       f"""<p>To log in, visit <a href=\'{url}\' target='_blank'>{url}</a> and enter in your username and password.</p>"""
+                                       f'<p>If you have questions or comments please email me anytime at <a href="mailto:lair60@yahoo.es" target="_blank">lair60@yahoo.es</a>.</p>'
+                                       f'<p>Thanks!</p>'
+                                       f'<p>Luis Inga</p>'
+                                       f'<p><a href="https://www.luisingarivera.com" target="_blank">https://www.luisingarivera.com</a></p>')
+                msg = EmailMessage('Your new user details', message_email_html, 'lair60@yahoo.es', [email_user])
+                """
+                send_mail(
+                    'User Created',
+                    'Username: '+ email_user + ' password: '+ password,
+                    'lair60@yahoo.es',
+                    [email_user],
+                    fail_silently=False,
+                )
+				"""
+                msg.content_subtype = "html"
+                msg.send()
+            return render(request, 'catalog/user_created.html', context)
+    else:
+        template_name ='catalog/create_user_form.html'
+        form = CreateNewUserForm()
+        context = {'form': form}
+
+    return render(request, 'catalog/create_user_form.html', context)
+		
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
