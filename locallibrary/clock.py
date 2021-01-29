@@ -1,6 +1,6 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from rq import Queue
-from utils import removeLinks
+from locallibrary.utils import removeLinks
 
 """
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
