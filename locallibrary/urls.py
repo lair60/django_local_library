@@ -52,5 +52,5 @@ from django.conf.urls.static import static
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-from clock import start_jobs
+from locallibrary.clock import start_jobs
 start_jobs()
