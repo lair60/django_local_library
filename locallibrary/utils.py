@@ -1,4 +1,3 @@
-import requests
 import datetime
 from .models import TemporalLink
 
