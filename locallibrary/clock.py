@@ -4,8 +4,6 @@ from worker import conn
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
 
-q = Queue(connection=conn)
-sched = BlockingScheduler()
 from utils import removeLinks
 @sched.scheduled_job('interval', minutes=1)
 def timed_job():
@@ -17,5 +15,7 @@ def scheduled_job():
     print('This job is run every weekday at 5pm.')
 	
 """
-
-sched.start()
+if __name__ == '__main__':
+   q = Queue(connection=conn)
+   sched = BlockingScheduler()
+   sched.start()
