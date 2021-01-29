@@ -1,8 +1,5 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from rq import Queue
-from worker import conn
-import os
-import django
 from utils import removeLinks
 
 """
@@ -12,6 +9,9 @@ def scheduled_job():
 	
 """
 if __name__ == '__main__':
+    import os
+    import django
+    from worker import conn
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
     django.setup()
     q = Queue(connection=conn)
