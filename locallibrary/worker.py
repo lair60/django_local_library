@@ -2,6 +2,8 @@ import os
 
 import redis
 from rq import Worker, Queue, Connection
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
 
 listen = ['high', 'default', 'low']
 

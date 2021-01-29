@@ -1,11 +1,12 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from rq import Queue
 from worker import conn
-from utils import removeLinks
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
 
 q = Queue(connection=conn)
 sched = BlockingScheduler()
-
+from utils import removeLinks
 @sched.scheduled_job('interval', minutes=1)
 def timed_job():
     result = q.enqueue(removeLinks)
