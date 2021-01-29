@@ -3,7 +3,7 @@ from rq import Queue
 from worker import conn
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
-
+django.setup()
 from utils import removeLinks
 @sched.scheduled_job('interval', minutes=1)
 def timed_job():
