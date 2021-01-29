@@ -1,7 +1,9 @@
+import os
+import django
 from apscheduler.schedulers.blocking import BlockingScheduler
 from rq import Queue
 from locallibrary.utils import removeLinks
-
+from locallibrary.worker import conn
 """
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
 def scheduled_job():
@@ -9,9 +11,7 @@ def scheduled_job():
 	
 """
 if __name__ == '__main__':
-    import os
-    import django
-    from worker import conn
+        
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
     django.setup()
     q = Queue(connection=conn)
@@ -23,6 +23,7 @@ if __name__ == '__main__':
     sched.start()
 else:
     def start_jobs():
+		
         q = Queue(connection=conn)
         sched = BlockingScheduler()
         @sched.scheduled_job('interval', minutes=1)
