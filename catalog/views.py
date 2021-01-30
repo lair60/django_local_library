@@ -34,6 +34,8 @@ from catalog.forms import CreateNewUserForm
 from django.contrib.auth.models import User
 import secrets
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.urls import reverse
 
 def SendLinkToRequestUser(request):
     context = {}
@@ -81,8 +83,7 @@ def SendLinkToRequestUser(request):
         context = {'form': form}
         return render(request, 'catalog/create_user_form.html', context)
 
-from django.core.mail import EmailMessage
-from django.urls import reverse
+
 def createNewUser(request,valink):
     context = {}
     if request.method == 'GET':              
