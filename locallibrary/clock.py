@@ -25,7 +25,7 @@ else:
     print('ELSE BRANCH') 
     from locallibrary.utils import removeLinks
     def start_jobs():
-	    print('This job is run every 1 minute.')
+        print('This job is run every 1 minute.')
         redis_url = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
         conn = redis.from_url(redis_url)
         q = Queue(connection=conn)
