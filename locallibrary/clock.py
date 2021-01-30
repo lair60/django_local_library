@@ -25,16 +25,13 @@ if __name__ == '__main__':
 else:
     from locallibrary.utils import removeLinks
     from apscheduler.schedulers.background  import BackgroundScheduler
-    def start_jobs():
-        
-        redis_url = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
-        conn = redis.from_url(redis_url)
-        q = Queue(connection=conn)
-        sched = BackgroundScheduler()
-        print('before func')
-        @sched.scheduled_job('interval', minutes=1)
-        def timed_job():
-            result = q.enqueue(removeLinks)
-            print('This job is run every 1 minute.')
-        print('before start')
+    redis_url = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
+    conn = redis.from_url(redis_url)
+    q = Queue(connection=conn)
+    sched = BackgroundScheduler()
+    @sched.scheduled_job('interval', minutes=1)
+    def timed_job():
+        result = q.enqueue(removeLinks)
+        print('This job is run every 1 minute.')
+    def start_jobs():            
         sched.start()
