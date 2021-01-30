@@ -34,6 +34,7 @@ from catalog.forms import CreateNewUserForm
 from django.contrib.auth.models import User
 import secrets
 from django.core.mail import send_mail
+
 from django.core.mail import EmailMessage
 from django.urls import reverse
 
@@ -44,8 +45,8 @@ def SendLinkToRequestUser(request):
         form = CreateNewUserForm(request.POST)
 
         # Check if the form is valid:
-        if form.is_valid():        
-            email_user = form.cleaned_data['email_user']
+        if form.is_valid():
+            email_user = form.cleaned_data['email_user']		
             if User.objects.filter(email=email_user).count() == 0:                
                 if request.is_secure():
                     url= "https://"
@@ -55,7 +56,7 @@ def SendLinkToRequestUser(request):
                 link_obj = TemporalLink(link_temporal=link_value, email_request=email_user)
                 link_obj.save()
                 context = {'email': email_user}
-                url= url + request.get_host() + reverse ('new-user-details' ,args=[link_value])
+                url= url + request.get_host() + reverse ('new-user-details',args=[link_value])
 			
                 message_email_html = (f'<p><b>Hello</b>,</p><br>'
                                        f'<p>Thank you for your request. Please click on the following link to validate the request and create the new user details:</p><br>'                                       
@@ -137,7 +138,8 @@ def createNewUser(request,valink):
         context = {'form': form}
 
     return render(request, 'catalog/create_user_form.html', context)
-"""		
+"""
+		
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
