@@ -3,7 +3,7 @@ import django
 
 from rq import Queue
 import redis
-
+initialized = False
 """
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
 def scheduled_job():
@@ -33,7 +33,6 @@ else:
     def timed_job():
         result = q.enqueue(removeLinks)
         print('This job is run every 1 minute.')
-    initialized = False
     def start_jobs():
         if initialized == False:
            initialized = True
