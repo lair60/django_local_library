@@ -34,6 +34,7 @@ else:
         result = q.enqueue(removeLinks)
         print('This job is run every 1 minute.')
     def start_jobs():
+        global initialized
         if initialized == False:
            initialized = True
            sched.start()
