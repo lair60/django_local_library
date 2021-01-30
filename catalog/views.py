@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 # Create your views here.
-from .models import Book, Author, BookInstance, Genre, RenewBookModelForm
+from .models import Book, Author, BookInstance, Genre, RenewBookModelForm, TemporalLink
 @login_required
 def index(request):
        """
@@ -35,22 +35,67 @@ from django.contrib.auth.models import User
 import secrets
 from django.core.mail import send_mail
 
-
-
-from django.core.mail import EmailMessage
-from django.urls import reverse
-def createNewUser(request):
+def SendLinkToRequestUser(request):
     context = {}
-    if request.method == 'POST':       
-        
-
+    if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
         form = CreateNewUserForm(request.POST)
 
         # Check if the form is valid:
-        if form.is_valid():
-            email_user = form.cleaned_data['email_user']
+        if form.is_valid():            
             if User.objects.filter(email=email_user).count() == 0:
+                email_user = form.cleaned_data['email_user']
+                if request.is_secure():
+                    url= "https://"
+                else:
+                    url= "http://"
+                link_value =  secrets.token_urlsafe()
+                link_obj = TemporalLink(link_temporal=link_value, email_request=email_user)
+                link_obj.save()
+                context = {'email': email_user}
+                url= url + request.get_host() + reverse ('new-user-details') + link_value
+			
+                message_email_html = (f'<p><b>Hello</b>,</p><br>'
+                                       f'<p>Thank you for your request. Please click on the following link to validate the request and create the new user details:</p><br>'                                       
+                                       f"""<p><a href=\'{url}\' target='_blank'>{url}</a></p>"""
+                                       f'<p>If you have questions or comments please email me anytime at <a href="mailto:lair60@yahoo.es" target="_blank">lair60@yahoo.es</a>.</p>'
+                                       f'<p>Best regards,</p>'
+                                       f'<p>Luis Inga</p>'
+                                       f'<p><a href="https://www.luisingarivera.com" target="_blank">https://www.luisingarivera.com</a></p>')
+                msg = EmailMessage('Validate your request', message_email_html, 'lair60@yahoo.es', [email_user])
+                """
+                send_mail(
+                    'User Created',
+                    'Username: '+ email_user + ' password: '+ password,
+                    'lair60@yahoo.es',
+                    [email_user],
+                    fail_silently=False,
+                )
+				"""
+                msg.content_subtype = "html"
+                msg.send()
+            return render(request, 'catalog/link_created.html', context)		
+    else:
+        template_name ='catalog/create_user_form.html'
+        form = CreateNewUserForm()
+        context = {'form': form}
+        return render(request, 'catalog/create_user_form.html', context)
+
+from django.core.mail import EmailMessage
+from django.urls import reverse
+def createNewUser(request,valink):
+    context = {}
+    if request.method == 'GET':              
+        # Create a form instance and populate it with data from the request (binding):
+        temp_obj = TemporalLink.objects.filter(link_temporal=valink)
+        if temp_obj.count() == 1:
+            obj_link = temp_obj[:1]
+        #form = CreateNewUserForm(request.POST)
+
+        # Check if the form is valid:
+        #if form.is_valid():
+            #email_user = form.cleaned_data['email_user']
+            if User.objects.filter(email=obj_link.email_request).count() == 0:
                 # redirect to a new URL:
                 context = {'email': email_user}                
                 password = secrets.token_urlsafe(16)             
@@ -82,14 +127,15 @@ def createNewUser(request):
 				"""
                 msg.content_subtype = "html"
                 msg.send()
-            return render(request, 'catalog/user_created.html', context)
+        return render(request, 'catalog/user_created.html', context)
+"""
     else:
         template_name ='catalog/create_user_form.html'
         form = CreateNewUserForm()
         context = {'form': form}
 
     return render(request, 'catalog/create_user_form.html', context)
-		
+"""		
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin

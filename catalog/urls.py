@@ -7,7 +7,7 @@ urlpatterns = [
   url(r'^$', views.index, name='index'),
   url(r'^books/$', views.BookListView.as_view(), name='books'),
   url(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(), name='book-detail'),
-  url(r'^newuser/$', views.createNewUser, name='new-user'),
+  url(r'^newuser/$', views.SendLinkToRequestUser, name='new-user'),
   
   url(r'^authors/$', views.AuthorListView.as_view(), name='authors'),
   url(r'^authors/(?P<pk>\d+)$', views.AuthorDetailView.as_view(), name='author-detail'),
@@ -21,4 +21,5 @@ urlpatterns = [
   path('book/create/', views.BookCreate.as_view(), name='book-create'),
   path('book/<int:pk>/update/', views.BookUpdate.as_view(), name='book-update'),
   path('book/<int:pk>/delete/', views.BookDelete.as_view(), name='book-delete'),
+  path('user/created/<str:valink>', views.createNewUser, name='new-user-details'),
 ]

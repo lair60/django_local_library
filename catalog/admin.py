@@ -14,8 +14,8 @@ admin.site.register(Language)
 # Define the admin class
 @admin.register(TemporalLink) 
 class TemporalLinkAdmin(admin.ModelAdmin):
-    list_display = ('link_temporal', 'created_at')
-    fields = ['link_temporal']
+    list_display = ('link_temporal', 'email_request' , 'created_at')
+    fields = ['link_temporal', 'email_request']
 	
 class BooksInline(admin.TabularInline):
     model = Book

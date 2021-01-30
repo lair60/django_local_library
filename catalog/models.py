@@ -156,6 +156,7 @@ class RenewBookModelForm(ModelForm):
 
 class TemporalLink(models.Model):
     link_temporal = models.CharField(max_length=100)
+    email_request = models.CharField(max_length=100,default='')
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         """
