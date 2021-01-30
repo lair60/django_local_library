@@ -55,7 +55,7 @@ def SendLinkToRequestUser(request):
                 link_obj = TemporalLink(link_temporal=link_value, email_request=email_user)
                 link_obj.save()
                 context = {'email': email_user}
-                url= url + request.get_host() + reverse ('new-user-details',args=[link_value])
+                url= url + request.get_host() + reverse ('new-user-details' ,args=[link_value])
 			
                 message_email_html = (f'<p><b>Hello</b>,</p><br>'
                                        f'<p>Thank you for your request. Please click on the following link to validate the request and create the new user details:</p><br>'                                       
