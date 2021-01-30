@@ -32,13 +32,9 @@ else:
         q = Queue(connection=conn)
         sched = BackgroundScheduler()
         print('before func')
-        #Set cron to runs every 20 min.
-        sched.add_job(removeLinks, 'interval', seconds=60)
-        """
         @sched.scheduled_job('interval', minutes=1)
         def timed_job():
             result = q.enqueue(removeLinks)
             print('This job is run every 1 minute.')
-        """
         print('before start')
         sched.start()
