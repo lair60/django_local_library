@@ -29,7 +29,7 @@ else:
         conn = redis.from_url(redis_url)
         q = Queue(connection=conn)
         sched = BlockingScheduler()
-		print('before func')
+        print('before func')
         @sched.scheduled_job('interval', minutes=1)
         def timed_job():
             result = q.enqueue(removeLinks)
