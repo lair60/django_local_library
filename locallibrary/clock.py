@@ -33,7 +33,7 @@ else:
         #Set cron to runs every 20 min.
         cron_job = {'month': '*', 'day': '*', 'hour': '*', 'minute':'*/1'}    
         #Add our task to scheduler.
-        scheduler.add_job(removeLinks, 'cron', **cron_job)
+        sched.add_job(removeLinks, 'cron', **cron_job)
         """
         @sched.scheduled_job('interval', minutes=1)
         def timed_job():
