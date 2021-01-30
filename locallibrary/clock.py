@@ -1,6 +1,6 @@
 import os
 import django
-from apscheduler.schedulers.blocking import BlockingScheduler
+
 from rq import Queue
 import redis
 
@@ -12,6 +12,7 @@ def scheduled_job():
 """
 if __name__ == '__main__':
     from utils import removeLinks   
+    from apscheduler.schedulers.blocking  import BlockingScheduler
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'locallibrary.settings')
     django.setup()
     q = Queue(connection=conn)
@@ -23,17 +24,16 @@ if __name__ == '__main__':
     sched.start()
 else:
     from locallibrary.utils import removeLinks
+    from apscheduler.schedulers.background  import BackgroundScheduler
     def start_jobs():
         
         redis_url = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
         conn = redis.from_url(redis_url)
         q = Queue(connection=conn)
-        sched = BlockingScheduler()
+        sched = BackgroundScheduler()
         print('before func')
         #Set cron to runs every 20 min.
-        cron_job = {'month': '*', 'day': '*', 'hour': '*', 'minute':'*/1'}    
-        #Add our task to scheduler.
-        sched.add_job(removeLinks, 'cron', **cron_job)
+        sched.add_job(removeLinks, 'interval', seconds=60)
         """
         @sched.scheduled_job('interval', minutes=1)
         def timed_job():
