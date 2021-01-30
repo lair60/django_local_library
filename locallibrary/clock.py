@@ -2,6 +2,7 @@ import os
 import django
 from apscheduler.schedulers.blocking import BlockingScheduler
 from rq import Queue
+import redis
 
 """
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
@@ -21,9 +22,10 @@ if __name__ == '__main__':
         print('This job is run every 1 minute.')
     sched.start()
 else:
-    import redis
+    print('ELSE BRANCH') 
     from locallibrary.utils import removeLinks
     def start_jobs():
+	    print('This job is run every 1 minute.')
         redis_url = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
         conn = redis.from_url(redis_url)
         q = Queue(connection=conn)
