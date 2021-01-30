@@ -40,5 +40,5 @@ else:
             result = q.enqueue(removeLinks)
             print('This job is run every 1 minute.')
         """
-		print('before start')
+        print('before start')
         sched.start()
