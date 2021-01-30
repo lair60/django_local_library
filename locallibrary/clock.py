@@ -33,5 +33,8 @@ else:
     def timed_job():
         result = q.enqueue(removeLinks)
         print('This job is run every 1 minute.')
-    def start_jobs():            
-        sched.start()
+    initialized = False
+    def start_jobs():
+        if initialized == False:
+           initialized = True
+           sched.start()
