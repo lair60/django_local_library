@@ -22,14 +22,14 @@ if __name__ == '__main__':
         print('This job is run every 1 minute.')
     sched.start()
 else:
-    print('ELSE BRANCH') 
     from locallibrary.utils import removeLinks
     def start_jobs():
-        print('This job is run every 1 minute.')
+        
         redis_url = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
         conn = redis.from_url(redis_url)
         q = Queue(connection=conn)
         sched = BlockingScheduler()
+		print('before func')
         @sched.scheduled_job('interval', minutes=1)
         def timed_job():
             result = q.enqueue(removeLinks)
