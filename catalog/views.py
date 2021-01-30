@@ -44,9 +44,9 @@ def SendLinkToRequestUser(request):
         form = CreateNewUserForm(request.POST)
 
         # Check if the form is valid:
-        if form.is_valid():            
-            if User.objects.filter(email=email_user).count() == 0:
-                email_user = form.cleaned_data['email_user']
+        if form.is_valid():        
+            email_user = form.cleaned_data['email_user']
+            if User.objects.filter(email=email_user).count() == 0:                
                 if request.is_secure():
                     url= "https://"
                 else:
@@ -55,7 +55,7 @@ def SendLinkToRequestUser(request):
                 link_obj = TemporalLink(link_temporal=link_value, email_request=email_user)
                 link_obj.save()
                 context = {'email': email_user}
-                url= url + request.get_host() + reverse ('new-user-details') + link_value
+                url= url + request.get_host() + reverse ('new-user-details',args=[link_value])
 			
                 message_email_html = (f'<p><b>Hello</b>,</p><br>'
                                        f'<p>Thank you for your request. Please click on the following link to validate the request and create the new user details:</p><br>'                                       
@@ -90,13 +90,14 @@ def createNewUser(request,valink):
         # Create a form instance and populate it with data from the request (binding):
         temp_obj = TemporalLink.objects.filter(link_temporal=valink)
         if temp_obj.count() == 1:
-            obj_link = temp_obj[:1]
+            obj_link = temp_obj[0]
         #form = CreateNewUserForm(request.POST)
 
         # Check if the form is valid:
         #if form.is_valid():
             #email_user = form.cleaned_data['email_user']
-            if User.objects.filter(email=obj_link.email_request).count() == 0:
+            email_user = obj_link.email_request
+            if User.objects.filter(email=email_user).count() == 0:
                 # redirect to a new URL:
                 context = {'email': email_user}                
                 password = secrets.token_urlsafe(16)             
