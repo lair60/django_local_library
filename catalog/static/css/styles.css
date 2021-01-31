@@ -3,3 +3,30 @@
     padding: 0;
     list-style: none;
 }
+
+img.logo-django{
+	width:100px;
+}
+
+.header-logo{
+	text-align: center;
+	background-color: #103e2e;
+}
+
+.footer-body{
+	height:42px;
+	margin:0 auto;
+	text-align: center; 
+	font-family:cursive;
+	border-top:1px solid #e3e3e3;
+	background-color:#103e2e;
+	padding-bottom:1%;
+	padding-top:1%;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+.footer-body a{
+	color: white;
+}
