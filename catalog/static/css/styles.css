@@ -4,6 +4,10 @@
     list-style: none;
 }
 
+.container-fluid{
+	margin-bottom: 42px;
+}
+
 img.logo-django{
 	width:100px;
 }
