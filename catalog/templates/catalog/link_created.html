@@ -21,10 +21,15 @@
   <div style="margin-left: 15px;margin-top: 5px;" class="container-fluid">
 
 	{% if email %}
-		<p>Thank you for the request. We've sent an email to <b>{{email}}</b> with the following steps to create a new user. </p><p>If they haven't arrived in a few minutes, please check your spam folder.</p>
+		<p>Thank you for your request. Please click on the link that has just been sent to your email <b>{{email}}</b> to verify your email and continue the registration process.<p>If the link is expired(after 10min aprox), please request it again.</p>
 	{% else %}
-        <h1>Create a new user failed</h1>
-        <p>The email address is already taken. Please request a new password reset or use another email address</p>
+		{% if link_sent_already %}
+			<h1>Create a new user failed</h1>
+			<p>The link has been sent already. If they haven't arrived in a few minutes, please check your spam folder.</p>
+		{% else %}
+			<h1>Create a new user failed</h1>
+            <p>The email address is already taken. Please use another email address</p>
+		{% endif %}
     {% endif %}
 	<form action="{% url 'login' %}" method="post">
 {% csrf_token %}

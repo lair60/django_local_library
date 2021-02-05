@@ -47,42 +47,38 @@ def SendLinkToRequestUser(request):
         # Check if the form is valid:
         if form.is_valid():
             email_user = form.cleaned_data['email_user']		
-            if User.objects.filter(email=email_user).count() == 0:                
-                if request.is_secure():
-                    url= "https://"
-                else:
-                    url= "http://"
-                link_value =  secrets.token_urlsafe()
-                link_obj = TemporalLink(link_temporal=link_value, email_request=email_user)
-                link_obj.save()
-                context = {'email': email_user}
-                url= url + request.get_host() + reverse ('new-user-details',args=[link_value])
+            if User.objects.filter(email=email_user).count() == 0:
+                if TemporalLink.objects.filter(email_request=email_user).count() == 0:
+                    if request.is_secure():
+                        url= "https://"
+                    else:
+                        url= "http://"
+                    link_value =  secrets.token_urlsafe()
+                    link_obj = TemporalLink(link_temporal=link_value, email_request=email_user)
+                    link_obj.save()
+                    context = {'email': email_user}
+                    url= url + request.get_host() + reverse ('new-user-details',args=[link_value])
 			
-                message_email_html = (f'<p><b>Hello</b>,</p><br>'
+                    message_email_html = (f'<p><b>Hello</b>,</p><br>'
                                        f'<p>Thank you for your request. Please click on the following link to validate the request and create the new user details:</p><br>'                                       
                                        f"""<p><a href=\'{url}\' target='_blank'>{url}</a></p>"""
                                        f'<p>If you have questions or comments please email me anytime at <a href="mailto:lair60@yahoo.es" target="_blank">lair60@yahoo.es</a>.</p>'
                                        f'<p>Best regards,</p>'
                                        f'<p>Luis Inga</p>'
                                        f'<p><a href="https://www.luisingarivera.com" target="_blank">https://www.luisingarivera.com</a></p>')
-                msg = EmailMessage('Validate your request', message_email_html, 'lair60@yahoo.es', [email_user])
-                """
-                send_mail(
-                    'User Created',
-                    'Username: '+ email_user + ' password: '+ password,
-                    'lair60@yahoo.es',
-                    [email_user],
-                    fail_silently=False,
-                )
-				"""
-                msg.content_subtype = "html"
-                msg.send()
-            return render(request, 'catalog/link_created.html', context)		
+                    msg = EmailMessage('Validate your request', message_email_html, 'lair60@yahoo.es', [email_user])
+                
+                    msg.content_subtype = "html"
+                    msg.send()
+                else:
+                    context = {'link_sent_already': True}
+                return render(request, 'blog/link_created.html', context)	
+            return render(request, 'blog/link_created.html', context)		
     else:
-        template_name ='catalog/create_user_form.html'
+        template_name ='blog/create_user_form.html'
         form = CreateNewUserForm()
         context = {'form': form}
-        return render(request, 'catalog/create_user_form.html', context)
+        return render(request, 'blog/create_user_form.html', context)
 
 
 def createNewUser(request,valink):
